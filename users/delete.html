@@ -32,8 +32,8 @@
 		console.log(response);
 			user.innerHTML+=`<div class="user">
 				<p>
-					<strong>Email</strong>: ${response.data.email}<br />
-					<strong>Password</strong>: ${response.data.password}
+					<strong>Email</strong>: ${response.data[0].email}<br />
+					<strong>Password</strong>: ${response.data[0].password}
 				</p>
 				<p class="lead">Are you sure you want to delete the user? </a>
 				<button id="delete" class="btn btn-danger">Yes</button>
@@ -52,10 +52,13 @@
 			})
 			  .then(function (response) {
 				console.log(response);
+
+
 			  })
 			  .catch(function (error) {
 				console.log(error);
 			  });
+			  user.innerHTML+="Successfully deleted. Hit go back to return to index.";
 		})
 	  })
 	  .catch(function (error) {

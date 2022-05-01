@@ -62,7 +62,8 @@ router.patch('/:id',(req,res)=>{
 		console.log('Connected to database')
 		const email = req.body.email
 		const password = req.body.password
-		database.collection('users').updateOne(({"_id": ObjectId(`${userid}`)},{$set:{"email":`'${email}'`,"password": `'${password}'`}}),function(err,result){
+		const userId=req.params.id
+		database.collection('users').updateOne({"_id": ObjectId(`${userId}`)},{$set:{"email":`${email}`,"password": `${password}`}},function(err,result){
 			if (err) throw err
 			console.log(result)
 		})
@@ -74,9 +75,19 @@ router.patch('/:id',(req,res)=>{
 	})
 })
 router.delete('/:id',(req,res)=>{
-	let users=JSON.parse(fs.readFileSync('./data/users.json','utf8'))
-	users.splice(req.params.id, 1)
-	fs.writeFileSync('./data/users.json',JSON.stringify(users))
-	res.status(200).json({message:'user deleted'})
+	client.connect(function(err,db){
+		if(err) throw err
+		console.log('Connected to database')
+		userId=req.params.id
+		database.collection('users').deleteOne({"_id": ObjectId(`${userId}`)},function(err,result){
+			if (err) throw err
+			console.log(result)
+		})
+		database.collection('users').find({}).toArray(function(err, result){
+			if (err) throw err
+			console.log(result)
+			db.close()
+		})
+	})
 })
 module.exports = router
